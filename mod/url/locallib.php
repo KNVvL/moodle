@@ -426,7 +426,10 @@ function url_get_variable_options($config) {
     }
 
     $options[get_string('user')] = array(
-        'userid'          => 'id',
+        'group'	 => 'group',
+	'grouping' => 'grouping', 
+	'role' => 'role',	
+	'userid'          => 'id',
         'userusername'    => get_string('username'),
         'useridnumber'    => get_string('idnumber'),
         'userfirstname'   => get_string('firstname'),
@@ -454,6 +457,18 @@ function url_get_variable_options($config) {
     }
 
     return $options;
+}
+
+function getrole($courseid, $userid){
+$rolestr = array();
+$context = context_course::instance($courseid);
+$roles = get_user_roles($context, $userid);
+foreach ($roles as $role) {
+    $rolestr[] = role_get_name($role, $context);
+}
+$rolestr = implode(', ', $rolestr);
+
+return $rolestr;
 }
 
 /**
@@ -489,6 +504,10 @@ function url_get_variable_values($url, $cm, $course, $config) {
     );
 
     if (isloggedin()) {
+
+	$values['group']	   = groups_get_group_name(groups_get_course_group($course));
+ 	$values['grouping']	   = groups_get_grouping_name(1);	
+	$values['role']		   = getrole($course->id, $USER->id);
         $values['userid']          = $USER->id;
         $values['userusername']    = $USER->username;
         $values['useridnumber']    = $USER->idnumber;
