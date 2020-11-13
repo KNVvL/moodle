@@ -504,9 +504,10 @@ function url_get_variable_values($url, $cm, $course, $config) {
     );
 
     if (isloggedin()) {
-
-	$values['group']	   = groups_get_group_name(groups_get_course_group($course));
- 	$values['grouping']	   = groups_get_grouping_name(1);	
+	require_once($CFG->dirroot.'/user/profile/lib.php');
+        profile_load_data($USER);
+        $values['group']           = groups_get_group_name(groups_get_course_group($course));
+        $values['grouping']        = $USER->profile_field_club;  
 	$values['role']		   = getrole($course->id, $USER->id);
         $values['userid']          = $USER->id;
         $values['userusername']    = $USER->username;
